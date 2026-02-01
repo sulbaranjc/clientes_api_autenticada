@@ -15,9 +15,6 @@ services:
       - --port
       - "8000"
 
-    ports:
-      - "8001:8000"
-
     environment:
       DB_HOST: clientes-api-autenticado-db
       DB_NAME: clientes_autenticado_db
@@ -46,9 +43,6 @@ services:
     volumes:
       - clientes_autenticado_db_data:/var/lib/mysql
       - ./docs/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql:ro
-
-    ports:
-      - "3307:3306"
 
     networks:
       - backend
