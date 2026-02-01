@@ -1,22 +1,24 @@
 -- =========================================================
--- SCRIPT INICIALIZADOR DE BASE DE DATOS PARA EL PROYECTO CLIENTES
+-- SCRIPT INICIALIZADOR DE BASE DE DATOS PARA EL PROYECTO CLIENTES AUTENTICADO
 -- Autor: Juan Carlos Sulbarán González
 -- Fecha: 2025-11-12
 -- Descripción:
 --   Este script elimina la base de datos si ya existe,
 --   la crea desde cero e inicializa clientes, roles y usuarios.
+-- Base de datos: clientes_autenticado_db
+-- Usuario: profesor | Contraseña: 4688
 -- =========================================================
 
 -- 1️⃣ Eliminar base de datos si existe
-DROP DATABASE IF EXISTS clientes_db;
+DROP DATABASE IF EXISTS clientes_autenticado_db;
 
 -- 2️⃣ Crear base de datos
-CREATE DATABASE clientes_db
+CREATE DATABASE clientes_autenticado_db
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_general_ci;
 
 -- 3️⃣ Seleccionar la base de datos
-USE clientes_db;
+USE clientes_autenticado_db;
 
 -- =========================================================
 -- 4️⃣ Tabla clientes

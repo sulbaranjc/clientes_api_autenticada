@@ -18,8 +18,8 @@ services:
     environment:
       DB_HOST: clientes-api-autenticado-db
       DB_NAME: clientes_autenticado_db
-      DB_USER: clientes_auth
-      DB_PASSWORD: clientes_auth123
+      DB_USER: profesor
+      DB_PASSWORD: 4688
       DB_PORT: "3306"
 
     depends_on:
@@ -36,8 +36,8 @@ services:
 
     environment:
       MYSQL_DATABASE: clientes_autenticado_db
-      MYSQL_USER: clientes_auth
-      MYSQL_PASSWORD: clientes_auth123
+      MYSQL_USER: profesor
+      MYSQL_PASSWORD: 4688
       MYSQL_ROOT_PASSWORD: root123
 
     volumes:
