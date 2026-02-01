@@ -44,7 +44,9 @@ password=admin123
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTcwMDAwMDAwMH0.abc123...",
-  "token_type": "bearer"
+  "token_type": "bearer",
+  "username": "admin",
+  "rol": "admin"
 }
 ```
 
@@ -393,6 +395,8 @@ const response = await fetch('http://localhost:8000/auth/login', {...});
 const data = await response.json();
 localStorage.setItem('access_token', data.access_token);
 localStorage.setItem('token_type', data.token_type);
+localStorage.setItem('username', data.username);
+localStorage.setItem('rol', data.rol);
 
 // Obtener token antes de cada request
 const token = localStorage.getItem('access_token');
@@ -404,6 +408,8 @@ const headers = {
 // Limpiar token al logout
 localStorage.removeItem('access_token');
 localStorage.removeItem('token_type');
+localStorage.removeItem('username');
+localStorage.removeItem('rol');
 ```
 
 ### Opción 2: sessionStorage (Más seguro)
@@ -469,8 +475,10 @@ export function AuthProvider({ children }) {
 
       const data = await response.json();
       localStorage.setItem('access_token', data.access_token);
+      localStorage.setItem('username', data.username);
+      localStorage.setItem('rol', data.rol);
       setToken(data.access_token);
-      setUser({ username });
+      setUser({ username: data.username, rol: data.rol });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -480,6 +488,8 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     localStorage.removeItem('access_token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('rol');
     setToken(null);
     setUser(null);
   };
@@ -593,12 +603,16 @@ export const useAuth = () => {
 
     const data = await response.json();
     localStorage.setItem('access_token', data.access_token);
+    localStorage.setItem('username', data.username);
+    localStorage.setItem('rol', data.rol);
     token.value = data.access_token;
-    user.value = { username };
+    user.value = { username: data.username, rol: data.rol };
   };
 
   const logout = () => {
     localStorage.removeItem('access_token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('rol');
     token.value = null;
     user.value = null;
   };
@@ -664,6 +678,8 @@ export class AuthService {
       .pipe(
         tap(response => {
           localStorage.setItem('access_token', response.access_token);
+          localStorage.setItem('username', response.username);
+          localStorage.setItem('rol', response.rol);
           this.token$.next(response.access_token);
         })
       );
@@ -671,6 +687,8 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('access_token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('rol');
     this.token$.next(null);
   }
 
@@ -728,7 +746,136 @@ export class AuthInterceptor implements HttpInterceptor {
 
 ---
 
-## 🛠️ Variables de Entorno
+## � Control de Permisos por Rol en el Frontend
+
+### Uso del Campo `rol` en la UI
+
+Ahora que el endpoint `/auth/login` devuelve el campo `rol`, puedes usar esta información para:
+
+#### 1. Mostrar/Ocultar Botones según Permisos
+
+```javascript
+// Después del login
+const rol = localStorage.getItem('rol');
+const isAdmin = rol === 'admin';
+
+// Habilitar/deshabilitar botones
+document.getElementById('btn-crear-cliente').style.display = isAdmin ? 'block' : 'none';
+document.getElementById('btn-editar-cliente').disabled = !isAdmin;
+document.getElementById('btn-eliminar-cliente').disabled = !isAdmin;
+```
+
+#### 2. Mostrar Rol en la Interfaz
+
+```javascript
+// Mostrar información del usuario en la navbar
+const username = localStorage.getItem('username');
+const rol = localStorage.getItem('rol');
+
+document.getElementById('user-info').innerHTML = `
+  <span>${username}</span>
+  <span class="badge ${rol === 'admin' ? 'badge-danger' : 'badge-info'}">
+    ${rol.toUpperCase()}
+  </span>
+`;
+```
+
+#### 3. Validación antes de Acciones
+
+```javascript
+async function eliminarCliente(id) {
+  const rol = localStorage.getItem('rol');
+  
+  if (rol !== 'admin') {
+    alert('Solo los administradores pueden eliminar clientes');
+    return;
+  }
+  
+  // Proceder con eliminación
+  const response = await fetch(`http://localhost:8000/clientes/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+    }
+  });
+  
+  if (response.status === 403) {
+    alert('No tienes permisos para esta acción');
+  }
+}
+```
+
+#### 4. React - Componente Condicional
+
+```jsx
+function ClientesActions({ clienteId }) {
+  const rol = localStorage.getItem('rol');
+  const isAdmin = rol === 'admin';
+  
+  return (
+    <div>
+      <button onClick={() => verCliente(clienteId)}>Ver</button>
+      
+      {isAdmin && (
+        <>
+          <button onClick={() => editarCliente(clienteId)}>Editar</button>
+          <button onClick={() => eliminarCliente(clienteId)}>Eliminar</button>
+        </>
+      )}
+    </div>
+  );
+}
+```
+
+#### 5. Vue.js - Directivas Condicionales
+
+```vue
+<template>
+  <div>
+    <h2>Bienvenido, {{ username }} <span class="badge">{{ rol }}</span></h2>
+    
+    <button @click="verClientes">Ver Clientes</button>
+    
+    <!-- Solo visible para administradores -->
+    <button v-if="isAdmin" @click="crearCliente">Crear Cliente</button>
+    <button v-if="isAdmin" @click="editarCliente">Editar</button>
+    <button v-if="isAdmin" @click="eliminarCliente">Eliminar</button>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      username: localStorage.getItem('username'),
+      rol: localStorage.getItem('rol')
+    };
+  },
+  computed: {
+    isAdmin() {
+      return this.rol === 'admin';
+    }
+  }
+};
+</script>
+```
+
+#### 6. Tabla de Permisos por Rol
+
+| Acción | Admin | Lector |
+|--------|-------|--------|
+| Ver clientes (GET) | ✅ | ✅ |
+| Ver detalle (GET) | ✅ | ✅ |
+| Crear cliente (POST) | ✅ | ❌ 403 |
+| Editar cliente (PUT) | ✅ | ❌ 403 |
+| Eliminar cliente (DELETE) | ✅ | ❌ 403 |
+| Cambiar password (POST) | ✅ | ✅ |
+
+**Nota:** El backend siempre valida los permisos, el frontend solo mejora la UX ocultando opciones no permitidas.
+
+---
+
+## �🛠️ Variables de Entorno
 
 ### Para Desarrollo (Frontend)
 
@@ -976,7 +1123,7 @@ if (response.status === 500) {
 **R:** Sí, modifica `ACCESS_TOKEN_EXPIRE_MINUTES` en `.env`.
 
 ### P: ¿Cómo sé qué rol tiene el usuario?
-**R:** Decodifica el JWT (contiene el rol en el payload) o guárdalo al login.
+**R:** El endpoint `/auth/login` devuelve el campo `rol` directamente en la respuesta. También puedes decodificar el JWT si lo necesitas.
 
 ### P: ¿Qué es CORS?
 **R:** Mecanismo de seguridad del navegador. Backend debe permitir requests desde tu frontend.

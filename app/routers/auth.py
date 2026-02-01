@@ -13,7 +13,7 @@ from app.auth.passwords import verify_password, hash_password
 from app.auth.jwt import create_access_token
 from app.auth.deps import get_current_user
 from app.repository.users_repo import get_user_by_username, update_user_password
-from app.schemas.auth import ChangePasswordRequest, ChangePasswordResponse
+from app.schemas.auth import ChangePasswordRequest, ChangePasswordResponse, TokenResponse
 
 router = APIRouter(
     prefix="/auth",
@@ -25,13 +25,15 @@ router = APIRouter(
 # ======================================================
 @router.post(
     "/login",
+    response_model=TokenResponse,
     summary="Login y generación de JWT",
     description="""
     Autenticación de usuario usando **OAuth2 Password Flow**.
 
     - Compatible con Swagger UI (Authorize)
-    - Devuelve un JWT Bearer
+    - Devuelve un JWT Bearer con información del usuario
     - Usa username y password
+    - Incluye username y rol en la respuesta para el frontend
     """,
 )
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
@@ -65,10 +67,12 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
         }
     )
 
-    # 4️⃣ Respuesta estándar OAuth2
+    # 4️⃣ Respuesta con información completa para el frontend
     return {
         "access_token": access_token,
-        "token_type": "bearer"
+        "token_type": "bearer",
+        "username": user["username"],
+        "rol": user["role"]
     }
 
 # ======================================================
