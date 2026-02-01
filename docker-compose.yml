@@ -1,14 +1,14 @@
 services:
   db:
     image: mariadb:10.6
-    container_name: clientes-api-db
+    container_name: clientes-api-autenticado-db
     environment:
-      - MARIADB_DATABASE=clientes_db
-      - MARIADB_USER=profesor
-      - MARIADB_PASSWORD=4688
+      - MARIADB_DATABASE=clientes_autenticado_db
+      - MARIADB_USER=clientes_auth
+      - MARIADB_PASSWORD=clientes_auth123
       - MARIADB_ROOT_PASSWORD=root4688
     volumes:
-      - clientes_db_data:/var/lib/mysql
+      - clientes_autenticado_db_data:/var/lib/mysql
       - ./docs/init_db.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
     networks:
       - backend
@@ -16,15 +16,15 @@ services:
 
   app:
     build: .
-    image: clientes-api:latest
-    container_name: clientes-api
+    image: clientes-api-autenticado:latest
+    container_name: clientes-api-autenticado
     environment:
       - DB_HOST=db
-      - DB_USER=profesor
-      - DB_PASSWORD=4688
-      - DB_NAME=clientes_db
+      - DB_USER=clientes_auth
+      - DB_PASSWORD=clientes_auth123
+      - DB_NAME=clientes_autenticado_db
       - DB_PORT=3306
-      - VIRTUAL_HOST=clientes-api.docker.sulbaranjc.com
+      - VIRTUAL_HOST=clientes-api-autenticado.docker.sulbaranjc.com
       - VIRTUAL_PORT=8000
     depends_on:
       - db
@@ -34,7 +34,7 @@ services:
     restart: unless-stopped
 
 volumes:
-  clientes_db_data:
+  clientes_autenticado_db_data:
 
 networks:
   backend:

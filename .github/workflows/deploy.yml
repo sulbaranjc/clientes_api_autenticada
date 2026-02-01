@@ -1,0 +1,48 @@
+name: Deploy clientes_api_autenticado
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: 🐳 Construir imagen Docker
+        run: |
+          docker build -t clientes-api-autenticado:latest .
+
+      - name: 📦 Empaquetar imagen
+        run: |
+          docker save clientes-api-autenticado:latest | gzip > clientes-api-autenticado.tar.gz
+
+      - name: 🚚 Copiar imagen al servidor
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: clientes-api-autenticado.tar.gz
+          target: /tmp
+
+      - name: 🚀 Desplegar en servidor Docker
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            cd /home/sulbaranjc/apps/clientes_api_autenticado
+
+            docker compose down
+            docker load < /tmp/clientes-api-autenticado.tar.gz
+            docker compose up -d
+
+            echo "✅ Despliegue completado correctamente"

@@ -1,0 +1,62 @@
+name: clientes_api_autenticado_dev
+
+services:
+  clientes-api-autenticado:
+    build:
+      context: .
+    image: clientes-api-autenticado:dev
+    container_name: clientes-api-autenticado-dev
+
+    command:
+      - uvicorn
+      - app.main:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+
+    ports:
+      - "8001:8000"
+
+    environment:
+      DB_HOST: clientes-api-autenticado-db
+      DB_NAME: clientes_autenticado_db
+      DB_USER: clientes_auth
+      DB_PASSWORD: clientes_auth123
+      DB_PORT: "3306"
+
+    depends_on:
+      - clientes-api-autenticado-db
+
+    networks:
+      - backend
+
+    restart: unless-stopped
+
+  clientes-api-autenticado-db:
+    image: mariadb:10.6
+    container_name: clientes-api-autenticado-db-dev
+
+    environment:
+      MYSQL_DATABASE: clientes_autenticado_db
+      MYSQL_USER: clientes_auth
+      MYSQL_PASSWORD: clientes_auth123
+      MYSQL_ROOT_PASSWORD: root123
+
+    volumes:
+      - clientes_autenticado_db_data:/var/lib/mysql
+      - ./docs/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql:ro
+
+    ports:
+      - "3307:3306"
+
+    networks:
+      - backend
+
+    restart: unless-stopped
+
+volumes:
+  clientes_autenticado_db_data:
+
+networks:
+  backend:
