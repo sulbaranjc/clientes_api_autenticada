@@ -72,12 +72,30 @@ INSERT INTO roles (nombre, descripcion) VALUES
 -- =========================================================
 -- 8️⃣ Datos de ejemplo en clientes
 -- =========================================================
+
 INSERT INTO clientes (nombre, apellido, email, telefono, direccion) VALUES
 ('Juan', 'Pérez', 'juan.perez@example.com', '555-0101', 'Calle 123, Ciudad'),
 ('María', 'García', 'maria.garcia@example.com', '555-0102', 'Avenida 456, Ciudad'),
 ('Carlos', 'Rodríguez', 'carlos.rodriguez@example.com', '555-0103', 'Plaza 789, Ciudad'),
 ('Ana', 'Martínez', 'ana.martinez@example.com', '555-0104', 'Paseo 321, Ciudad'),
-('Luis', 'López', 'luis.lopez@example.com', '555-0105', 'Boulevard 654, Ciudad');
+('Luis', 'López', 'luis.lopez@example.com', '555-0105', 'Boulevard 654, Ciudad'),
+('Sofía', 'Hernández', 'sofia.hernandez@example.com', '555-0106', 'Calle Mayor 12, Ciudad'),
+('Miguel', 'Sánchez', 'miguel.sanchez@example.com', '555-0107', 'Avenida del Sol 45, Ciudad'),
+('Laura', 'Ramírez', 'laura.ramirez@example.com', '555-0108', 'Calle Luna 78, Ciudad'),
+('Javier', 'Torres', 'javier.torres@example.com', '555-0109', 'Plaza Central 3, Ciudad'),
+('Elena', 'Flores', 'elena.flores@example.com', '555-0110', 'Paseo del Río 56, Ciudad'),
+('Daniel', 'Vargas', 'daniel.vargas@example.com', '555-0111', 'Calle Norte 90, Ciudad'),
+('Paula', 'Moreno', 'paula.moreno@example.com', '555-0112', 'Avenida Libertad 102, Ciudad'),
+('Alejandro', 'Castro', 'alejandro.castro@example.com', '555-0113', 'Boulevard Central 14, Ciudad'),
+('Lucía', 'Ortiz', 'lucia.ortiz@example.com', '555-0114', 'Calle Jardín 27, Ciudad'),
+('Fernando', 'Navarro', 'fernando.navarro@example.com', '555-0115', 'Plaza del Mercado 8, Ciudad'),
+('Isabel', 'Rojas', 'isabel.rojas@example.com', '555-0116', 'Paseo de los Álamos 61, Ciudad'),
+('Ricardo', 'Molina', 'ricardo.molina@example.com', '555-0117', 'Avenida Central 200, Ciudad'),
+('Carmen', 'Delgado', 'carmen.delgado@example.com', '555-0118', 'Calle Primavera 33, Ciudad'),
+('Andrés', 'Gutiérrez', 'andres.gutierrez@example.com', '555-0119', 'Boulevard del Parque 77, Ciudad'),
+('Natalia', 'Peña', 'natalia.pena@example.com', '555-0120', 'Calle Horizonte 5, Ciudad');
+
+
 
 -- admin (password: admin123)
 INSERT INTO usuarios (username, email, password_hash, rol_id)
