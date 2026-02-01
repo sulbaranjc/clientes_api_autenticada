@@ -1,7 +1,6 @@
-#!/mnt/DocumentosJC/proyectos/python/backend/fastapi/api/clientes_api/.venv/bin/python3
+#!/home/sulbaranjc/proyectos/python/backend/fastapi/api/clientes_api_autenticada/.venv/bin/python3
 import sys
 from fastapi.cli import main
 if __name__ == '__main__':
-    if sys.argv[0].endswith('.exe'):
-        sys.argv[0] = sys.argv[0][:-4]
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
     sys.exit(main())

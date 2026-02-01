@@ -1,4 +1,4 @@
-#!/mnt/DocumentosJC/proyectos/python/backend/fastapi/api/clientes_api/.venv/bin/python3
+#!/home/sulbaranjc/proyectos/python/backend/fastapi/api/clientes_api_autenticada/.venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

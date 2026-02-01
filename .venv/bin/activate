@@ -39,10 +39,10 @@ deactivate nondestructive
 if [ "${OSTYPE:-}" = "cygwin" ] || [ "${OSTYPE:-}" = "msys" ] ; then
     # transform D:\path\to\venv to /d/path/to/venv on MSYS
     # and to /cygdrive/d/path/to/venv on Cygwin
-    export VIRTUAL_ENV=$(cygpath /mnt/DocumentosJC/proyectos/python/backend/fastapi/api/clientes_api/.venv)
+    export VIRTUAL_ENV=$(cygpath /home/sulbaranjc/proyectos/python/backend/fastapi/api/clientes_api_autenticada/.venv)
 else
     # use the path as-is
-    export VIRTUAL_ENV=/mnt/DocumentosJC/proyectos/python/backend/fastapi/api/clientes_api/.venv
+    export VIRTUAL_ENV=/home/sulbaranjc/proyectos/python/backend/fastapi/api/clientes_api_autenticada/.venv
 fi
 
 _OLD_VIRTUAL_PATH="$PATH"
