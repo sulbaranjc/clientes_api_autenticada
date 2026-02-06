@@ -1,9 +1,9 @@
-name: clientes_api_autenticado_dev
-
+# Archivo para desarrollo local con hot-reload
 services:
-  clientes-api-autenticado:
+  app:
     build:
       context: .
+      dockerfile: Dockerfile
     image: clientes-api-autenticado:dev
     container_name: clientes-api-autenticado-dev
 
@@ -14,43 +14,55 @@ services:
       - 0.0.0.0
       - --port
       - "8000"
+      - --reload
+
+    ports:
+      - "8000:8000"
 
     environment:
-      DB_HOST: clientes-api-autenticado-db
+      DB_HOST: db
       DB_NAME: clientes_autenticado_db
       DB_USER: profesor
       DB_PASSWORD: 4688
-      DB_PORT: "3306"
+      DB_PORT: 3306
+
+    volumes:
+      - ./app:/app/app  # Hot reload en desarrollo
 
     depends_on:
-      - clientes-api-autenticado-db
+      - db
 
     networks:
-      - backend
+      - internal
 
-    restart: unless-stopped
-
-  clientes-api-autenticado-db:
+  db:
     image: mariadb:10.6
     container_name: clientes-api-autenticado-db-dev
 
+    ports:
+      - "3307:3306"  # Exponer puerto para debugging
+
     environment:
+      MYSQL_ROOT_PASSWORD: root4688
       MYSQL_DATABASE: clientes_autenticado_db
       MYSQL_USER: profesor
       MYSQL_PASSWORD: 4688
-      MYSQL_ROOT_PASSWORD: root123
+
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
     volumes:
-      - clientes_autenticado_db_data:/var/lib/mysql
-      - ./docs/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql:ro
+      - db_data_dev:/var/lib/mysql
+      - ./docs/init_db.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
 
     networks:
-      - backend
-
-    restart: unless-stopped
+      - internal
 
 volumes:
-  clientes_autenticado_db_data:
+  db_data_dev:
 
 networks:
-  backend:
+  internal:

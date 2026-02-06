@@ -22,14 +22,14 @@ jobs:
         run: |
           docker save clientes-api-autenticado:latest | gzip > clientes-api-autenticado.tar.gz
 
-      - name: 🚚 Copiar imagen al servidor
+      - name: 🚚 Copiar archivos al servidor
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: clientes-api-autenticado.tar.gz
-          target: /tmp
+          source: "clientes-api-autenticado.tar.gz,docker-compose.yml,docs/init_db.sql"
+          target: /tmp/clientes-api-deploy
 
       - name: 🚀 Desplegar en servidor Docker
         uses: appleboy/ssh-action@v1.0.3
@@ -39,10 +39,23 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -e
+            
+            # Crear directorio si no existe
+            mkdir -p /home/sulbaranjc/apps/clientes_api_autenticado/docs
+            
+            # Copiar archivos desde temporal
+            cp /tmp/clientes-api-deploy/docker-compose.yml /home/sulbaranjc/apps/clientes_api_autenticado/
+            cp /tmp/clientes-api-deploy/docs/init_db.sql /home/sulbaranjc/apps/clientes_api_autenticado/docs/
+            
+            # Cargar imagen Docker
+            docker load < /tmp/clientes-api-deploy/clientes-api-autenticado.tar.gz
+            
+            # Desplegar
             cd /home/sulbaranjc/apps/clientes_api_autenticado
-
             docker compose down
-            docker load < /tmp/clientes-api-autenticado.tar.gz
             docker compose up -d
-
+            
+            # Limpiar archivos temporales
+            rm -rf /tmp/clientes-api-deploy
+            
             echo "✅ Despliegue completado correctamente"
