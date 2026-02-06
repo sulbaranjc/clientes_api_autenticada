@@ -5,6 +5,9 @@ services:
     container_name: clientes-api-autenticado
     restart: always
 
+    env_file:
+      - .env
+
     environment:
       DB_HOST: db
       DB_NAME: clientes_autenticado_db
