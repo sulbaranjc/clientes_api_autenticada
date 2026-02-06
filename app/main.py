@@ -26,5 +26,5 @@ app.include_router(auth.router)
 @app.get("/")
 def root():
     return {
-        "mensaje": "API de Clientes activa 🚀"
+        "mensaje": "API de Clientes con autenticación JWT activa 🚀"
     }
