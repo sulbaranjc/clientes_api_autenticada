@@ -8,6 +8,7 @@ from mysql.connector import Error
 from mysql.connector.abstracts import MySQLConnectionAbstract
 from mysql.connector.pooling import PooledMySQLConnection
 from typing import Optional, Union
+from contextlib import contextmanager
 from dotenv import load_dotenv
 import os
 
@@ -39,6 +40,7 @@ def get_connection() -> Optional[Union[PooledMySQLConnection, MySQLConnectionAbs
         return None
 
 
+@contextmanager
 def get_db_cursor(dictionary: bool = True):
     """
     Context manager para manejo automático de conexión y cursor.
