@@ -10,13 +10,7 @@ from app.schemas.cliente import (
     ClienteCreate,
     ClienteUpdate
 )
-from app.database import (
-    get_all_clientes,
-    get_cliente_by_id,
-    create_cliente,
-    update_cliente,
-    delete_cliente
-)
+from app.repository.cliente_repository import cliente_repository
 
 router = APIRouter(
     prefix="/clientes",
@@ -28,7 +22,7 @@ router = APIRouter(
 # =========================
 @router.get("/", response_model=List[ClienteResponse])
 def listar_clientes():
-    return get_all_clientes()
+    return cliente_repository.get_all()
 
 
 # =========================
@@ -36,7 +30,7 @@ def listar_clientes():
 # =========================
 @router.get("/{cliente_id}", response_model=ClienteResponse)
 def obtener_cliente(cliente_id: int):
-    cliente = get_cliente_by_id(cliente_id)
+    cliente = cliente_repository.get_by_id(cliente_id)
 
     if not cliente:
         raise HTTPException(
@@ -60,10 +54,10 @@ def crear_cliente(
     _: dict = Depends(require_admin)
 ):
     try:
-        nuevo_id = create_cliente(cliente.model_dump())
+        nuevo_id = cliente_repository.create(cliente.model_dump())
 
-        # Cast explícito para el tipador (create_cliente devuelve el id)
-        return get_cliente_by_id(cast(int, nuevo_id))
+        # Cast explícito para el tipador (create devuelve el id)
+        return cliente_repository.get_by_id(cast(int, nuevo_id))
 
     except Error as e:
         # MySQL error code 1062 = Duplicate entry (email UNIQUE)
@@ -92,7 +86,7 @@ def actualizar_cliente(
     cliente: ClienteUpdate,
     _: dict = Depends(require_admin)
 ):
-    existente = get_cliente_by_id(cliente_id)
+    existente = cliente_repository.get_by_id(cliente_id)
     if not existente:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -100,7 +94,7 @@ def actualizar_cliente(
         )
 
     try:
-        actualizado = update_cliente(cliente_id, cliente.model_dump())
+        actualizado = cliente_repository.update(cliente_id, cliente.model_dump())
 
         if not actualizado:
             raise HTTPException(
@@ -108,7 +102,7 @@ def actualizar_cliente(
                 detail="Cliente no encontrado"
             )
 
-        return get_cliente_by_id(cliente_id)
+        return cliente_repository.get_by_id(cliente_id)
 
     except Error as e:
         if e.errno == 1062:
@@ -134,7 +128,7 @@ def eliminar_cliente(
     cliente_id: int,
     _: dict = Depends(require_admin)
 ):
-    existente = get_cliente_by_id(cliente_id)
+    existente = cliente_repository.get_by_id(cliente_id)
     if not existente:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -142,7 +136,7 @@ def eliminar_cliente(
         )
 
     try:
-        eliminado = delete_cliente(cliente_id)
+        eliminado = cliente_repository.delete(cliente_id)
 
         if not eliminado:
             raise HTTPException(

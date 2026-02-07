@@ -1,5 +1,5 @@
 from typing import Optional, Dict, Any, cast
-from app.database import get_connection
+from app.core.database import get_connection
 
 
 def get_user_by_username(username: str) -> Optional[Dict[str, Any]]:
