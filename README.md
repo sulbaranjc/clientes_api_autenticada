@@ -21,7 +21,8 @@
 13. [Base de Datos](#-base-de-datos)
 14. [Documentación Interactiva](#-documentación-interactiva)
 15. [Buenas Prácticas Implementadas](#-buenas-prácticas-implementadas)
-16. [Solución de Problemas](#-solución-de-problemas)
+16. [Herramientas de Gestión](#-herramientas-de-gestión)
+17. [Solución de Problemas](#-solución-de-problemas)
 
 ---
 
@@ -1540,7 +1541,56 @@ conn.close()
 
 ---
 
-## 📚 Recursos Adicionales
+## �️ Herramientas de Gestión
+
+### Script CLI de Gestión de Usuarios
+
+El proyecto incluye **`manage_users.py`**, una herramienta completa de línea de comandos para administrar usuarios y sus contraseñas desde la terminal.
+
+**Ubicación:** `scripts/manage_users.py`
+
+#### Comandos Disponibles
+
+```bash
+# Listar usuarios con estado de seguridad
+python scripts/manage_users.py list
+
+# Cambiar contraseña (interactivo)
+python scripts/manage_users.py change-password usuario@example.com
+
+# Cambiar contraseña (directo)
+python scripts/manage_users.py change-password usuario@example.com --password Nueva123!
+
+# Crear usuario nuevo
+python scripts/manage_users.py create-user nuevo@example.com nuevouser --rol user
+
+# Forzar cambio de contraseña en próximo login
+python scripts/manage_users.py force-change usuario@example.com
+
+# Activar/Desactivar usuario
+python scripts/manage_users.py activate usuario@example.com
+python scripts/manage_users.py deactivate usuario@example.com
+
+# Ver ayuda completa
+python scripts/manage_users.py --help
+```
+
+#### Características
+
+- ✅ **Validación de contraseñas** (mínimo 8 caracteres, mayúscula, minúscula, número)
+- ✅ **Estados visuales** con colores y emojis en terminal
+- ✅ **Integración completa** con políticas de contraseñas (expiración 90 días)
+- ✅ **Modo interactivo** seguro (contraseñas no visibles)
+- ✅ **Confirmaciones** antes de ejecutar cambios
+- ✅ **Auditoría** de cambios de contraseñas
+
+#### Documentación Completa
+
+📖 **Guía detallada:** [docs/GESTION_USUARIOS_CLI.md](docs/GESTION_USUARIOS_CLI.md)
+
+---
+
+## �📚 Recursos Adicionales
 
 ### Documentación Oficial
 

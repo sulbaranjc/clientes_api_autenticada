@@ -47,8 +47,35 @@ lector   : lector123
 
 ---
 
+## 🔧 Gestión de Usuarios desde CLI
+
+**Script:** `manage_users.py` - Herramienta completa de administración
+
+```bash
+# Listar usuarios
+python scripts/manage_users.py list
+
+# Cambiar contraseña
+python scripts/manage_users.py change-password usuario@example.com
+
+# Crear usuario
+python scripts/manage_users.py create-user nuevo@example.com nuevouser --rol user
+
+# Forzar cambio
+python scripts/manage_users.py force-change usuario@example.com
+
+# Ayuda
+python scripts/manage_users.py --help
+```
+
+📖 **Guía completa:** [GESTION_USUARIOS_CLI.md](GESTION_USUARIOS_CLI.md)
+
+---
+
 ## Archivos de Referencia
 
+- 🔧 `GESTION_USUARIOS_CLI.md` - Gestión de usuarios CLI (NUEVO)
+- 🔐 `GUIA_POLITICAS_CONTRASENAS.md` - Políticas de contraseñas
 - 📄 `CAMBIOS_RESUMEN.md` - ¿Qué cambió?
 - 📊 `ANALISIS_AUTENTICACION.md` - Análisis técnico
 - 📖 `GUIA_TECNICA_AUTENTICACION.md` - Documentación completa
