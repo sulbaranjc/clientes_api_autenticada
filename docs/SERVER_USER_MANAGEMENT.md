@@ -162,6 +162,10 @@ docker exec -it clientes-api-autenticado python /app/scripts/manage_users.py for
 **Comando:**
 ```bash
 docker exec -it clientes-api-autenticado python /app/scripts/manage_users.py change-password admin@example.com
+pudes cambiarlo a Admin123
+docker exec -it clientes-api-autenticado python /app/scripts/manage_users.py change-password usuario@example.com
+pudes cambiarlo a User1234
+
 ```
 
 **Flujo:**
