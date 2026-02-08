@@ -290,7 +290,7 @@ def create_user(
         rol_id = rol_row[0]
         
         # Hash de la contraseña
-        password_hash = pwd_context.hash(new_password)
+        password_hash = pwd_context.hash(password)
         
         # Insertar usuario
         query = """
