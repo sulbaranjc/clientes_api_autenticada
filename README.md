@@ -1,4 +1,4 @@
-# 🚀 API REST de Gestión de Clientes con Autenticación JWTxxxxxxx
+# 🚀 API REST de Gestión de Clientes con Autenticación JWT
 
 > **Proyecto Educativo** - FastAPI + MySQL + JWT Authentication by JC
 > 
