@@ -41,17 +41,17 @@ jobs:
             set -e
             
             # Crear directorio si no existe
-            mkdir -p /home/sulbaranjc/apps/clientes_api_autenticado/docs
+            mkdir -p /home/sulbaranjc/apps/clientes_api_autenticada/docs
             
             # Copiar archivos desde temporal
-            cp /tmp/clientes-api-deploy/docker-compose.yml /home/sulbaranjc/apps/clientes_api_autenticado/
-            cp /tmp/clientes-api-deploy/docs/init_db.sql /home/sulbaranjc/apps/clientes_api_autenticado/docs/
+            cp /tmp/clientes-api-deploy/docker-compose.yml /home/sulbaranjc/apps/clientes_api_autenticada/
+            cp /tmp/clientes-api-deploy/docs/init_db.sql /home/sulbaranjc/apps/clientes_api_autenticada/docs/
             
             # Cargar imagen Docker
             docker load < /tmp/clientes-api-deploy/clientes-api-autenticado.tar.gz
             
             # Desplegar
-            cd /home/sulbaranjc/apps/clientes_api_autenticado
+            cd /home/sulbaranjc/apps/clientes_api_autenticada
             docker compose down
             docker compose up -d
             
